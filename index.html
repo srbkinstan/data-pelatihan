@@ -1,0 +1,181 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<title>Data Pelatihan Karyawan</title>
+
+<link rel="manifest" href="manifest.json">
+
+<style>
+
+body{
+font-family:Arial,sans-serif;
+background:#f5f5f5;
+padding:20px;
+}
+
+.container{
+max-width:500px;
+margin:auto;
+background:white;
+padding:20px;
+border-radius:10px;
+box-shadow:0 2px 8px rgba(0,0,0,.2);
+}
+
+h2{
+text-align:center;
+}
+
+input,select,button{
+width:100%;
+padding:12px;
+margin-top:10px;
+border:1px solid #ddd;
+border-radius:6px;
+box-sizing:border-box;
+}
+
+button{
+background:#1565c0;
+color:white;
+font-weight:bold;
+cursor:pointer;
+}
+
+button:hover{
+background:#0d47a1;
+}
+
+.msg{
+margin-top:15px;
+text-align:center;
+font-weight:bold;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<h2>Data Pelatihan Karyawan</h2>
+
+<input
+id="id"
+type="text"
+maxlength="8"
+placeholder="Nomor Pener (8 digit)"
+>
+
+<input
+id="nama"
+type="text"
+placeholder="Nama Karyawan"
+>
+
+<input
+id="judul"
+type="text"
+placeholder="Judul Pelatihan"
+>
+
+<input
+id="tanggal"
+type="date"
+>
+
+<select id="jenis">
+<option value="">Pilih Jenis</option>
+<option>CORE</option>
+<option>SPESIFIC</option>
+<option>GENERIC</option>
+<option>SUPLEMENTARY</option>
+</select>
+
+<button onclick="simpan()">
+Simpan
+</button>
+
+<div class="msg" id="msg"></div>
+
+</div>
+
+<script>
+
+document.getElementById("tanggal").value =
+new Date().toISOString().split('T')[0];
+
+const API_URL =
+"https://script.google.com/macros/s/AKfycbx2camkQP8fOqOfr5EQsnwHg9tKXtzfb4VdZk9BTisNaB-A1qwUgjLIoOAyWThg1IN4/exec";
+
+async function simpan(){
+
+const id =
+document.getElementById("id").value.trim();
+
+const nama =
+document.getElementById("nama").value.trim();
+
+const judul =
+document.getElementById("judul").value.trim();
+
+const tanggal =
+document.getElementById("tanggal").value;
+
+const jenis =
+document.getElementById("jenis").value;
+
+if(!/^\d{8}$/.test(id)){
+alert("Nomor Pener harus 8 digit angka");
+return;
+}
+
+if(!nama){
+alert("Nama wajib diisi");
+return;
+}
+
+if(!judul){
+alert("Judul wajib diisi");
+return;
+}
+
+if(!jenis){
+alert("Pilih jenis pelatihan");
+return;
+}
+
+const res = await fetch(API_URL,{
+method:"POST",
+body:JSON.stringify({
+id,
+nama,
+judul,
+tanggal,
+jenis
+})
+});
+
+const hasil = await res.json();
+
+document.getElementById("msg").innerHTML =
+hasil.message;
+
+document.getElementById("judul").value="";
+
+}
+
+if("serviceWorker" in navigator){
+navigator.serviceWorker.register("sw.js");
+}
+
+</script>
+
+</body>
+</html>
